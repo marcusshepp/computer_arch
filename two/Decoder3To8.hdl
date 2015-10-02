@@ -1,8 +1,42 @@
 CHIP Decoder3To8 {
-  IN x[3];
-  OUT out[8];
+ IN x[3];
+ OUT out[8];
 
-  PARTS:
+ PARTS:
 
+ Not(in=x[2], out=notX2);
+ Not(in=x[1], out=notX1);
+ Not(in=x[0], out=notX0);
 
+ //out 7
+ And(a=x[2], b=x[1], out=out7);
+ And(a=out7, b=x[0], out=out[7]);
+
+ //out 6
+ And(a=x[2], b=x[1], out=out6);
+ And(a=out6, b=notX0, out=out[6]);
+
+ //out 5
+ And(a=x[2], b=notX1, out=out5);
+ And(a=out5, b=x[0], out=out[5]);
+
+ //out 4
+ And(a=x[2], b=notX1, out=out4);
+ And(a=out4, b=notX0, out=out[4]);
+
+ //out 3
+ And(a=notX2, b=x[1], out=out3);
+ And(a=out3, b=x[0], out=out[3]);
+
+ //out 2
+ And(a=notX2, b=x[1], out=out2);
+ And(a=out2, b=notX0, out=out[2]);
+
+ //out 1
+ And(a=notX2, b=notX1, out=out1);
+ And(a=out1, b=x[0], out=out[1]);
+
+ //out 0
+ And(a=notX2, b=notX1, out=out0);
+ And(a=out0, b=notX0, out=out[0]);
 }

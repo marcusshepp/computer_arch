@@ -3,4 +3,6 @@ CHIP Sub2 {
   OUT out[2];
 
   PARTS:
+  HalfSubtractor(a=x[0], b=y[0], diff=out[0], borrow=halfborrow);
+  FullSubtractor(a=x[1], b=y[1], c=halfborrow, diff=out[1], borrow=false);
 }
