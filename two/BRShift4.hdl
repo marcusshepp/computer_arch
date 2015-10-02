@@ -1,0 +1,9 @@
+CHIP BRShift4 {
+  IN in[4], load, shift;
+  OUT out[4];
+
+  PARTS:
+
+
+
+}

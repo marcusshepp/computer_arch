@@ -1,0 +1,56 @@
+CHIP SegmentDisplay {
+   IN x[3];
+   OUT a, b, c, d, e, f, g;
+
+   PARTS:
+   // Put your code here
+   Not(in=x[2], out=notX2);
+   Not(in=x[1], out=notX1);
+   Not(in=x[0], out=notX0);
+
+   // a
+   And(a=x[2], b=x[0], out=a1);
+   And(a=notX2, b=notX0, out=a2);
+   Or(a=x[1], b=a1, out=a3);
+   Or(a=a2, b=a3, out=a);
+
+   // b
+   And(a=x[0], b=x[1], out=sb1);
+   And(a=notX0, b=notX1, out=sb2);
+   Or(a=sb1, b=sb2, out=sb1OrSB2);
+   And(a=sb1OrSB2, b=x[2], out=b1OrB2);
+   Or(a=notX2, b=b1OrB2, out=b);
+
+   // c
+   Or(a=notX1, b=x[0], out=c1);
+   Or(a=x[2], b=c1, out=c);
+
+   // d
+   And(a=notX0, b=x[1], out=d1);
+   And(a=notX0, b=notX2, out=d2);
+   And(a=notX2, b=x[1], out=d3);
+   And(a=x[2], b=notX1, out=sd4);
+   And(a=sd4, b=x[0], out=d4);
+
+   Or(a=d1, b=d2, out=d1AndD2);
+   Or(a=d3, b=d4, out=d3AndD4);
+   Or(a=d1AndD2, b=d3AndD4, out=d);
+
+   // e
+   And(a=notX2, b=notX0, out=e1);
+   And(a=x[1], b=notX0, out=e2);
+   Or(a=e1, b=e2, out=e);
+
+   // f
+   And(a=notX1, b=notX0, out=f1);
+   And(a=x[2], b=notX1, out=f2);
+   And(a=x[2], b=notX0, out=f3);
+   Or(a=f1, b=f2, out=f4);
+   Or(a=f3, b=f4, out=f);
+
+
+   // g
+   And(a=notX2, b=x[1], out=g1);
+   And(a=x[2], b=notX1, out=g2);
+   Or(a=g1, b=g2, out=g);
+}

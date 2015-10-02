@@ -1,0 +1,7 @@
+CHIP OddCounter {
+  IN reset;
+  OUT out[16];
+
+  PARTS:
+
+}

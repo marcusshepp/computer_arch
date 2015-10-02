@@ -1,0 +1,9 @@
+CHIP HalfSubtractor {
+  IN a, b;
+  OUT diff, borrow;
+
+  PARTS:
+  Xor(a=a, b=b, out=diff);
+  Not(in=a, out=nota);
+  And(a=nota, b=b, out=borrow);
+}

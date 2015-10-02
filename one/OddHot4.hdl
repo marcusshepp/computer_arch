@@ -1,0 +1,18 @@
+/** Takes a 4 bit input.  If there are an odd number of 1's in the input, then
+   out = 1 otherwise out = 0
+
+   Ex:  If the input is 0011 (i.e., an even number of 1's) then
+           the output of this chip is 0.
+        If the input is 0010 (i.e., an odd number of 1's) then
+           the output of this chip is 1.
+*/
+
+CHIP OddHot4 {
+  IN in[4];
+  OUT out;
+
+  PARTS:
+  Xor(a=in[0], b=in[1], out=xor1);
+  Xor(a=in[2], b=in[3], out=xor2);
+  Xor(a=xor1, b=xor2, out=out);
+}

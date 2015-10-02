@@ -1,0 +1,15 @@
+CHIP FullSubtractor {
+  IN a, b, c;
+  OUT diff, borrow;
+
+  PARTS:
+  Xor(a=a, b=b, out=diff2);
+  Not(in=a, out=nota);
+  And(a=nota, b=b, out=borrow2);
+
+  Xor(a=c, b=diff2, out=diff);
+  Not(in=diff2, out=notdiff2);
+  And(a=notdiff2, b=c, out=sub2);
+
+  Or(a=sub2 ,b=borrow2 ,out=borrow);
+}

@@ -1,0 +1,23 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: NXor.hdl
+
+/**
+ *  Exclusive-or gate: out = !(a != b).
+ *  Output should be 1 if both a and b are the same
+ *  DO NOT USE AN XOR GATE
+ */
+
+CHIP NXor {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Nand(a=a, b=b, out=nand1);
+    Nand(a=a, b=nand1, out=nand2);
+    Nand(a=nand1, b=b, out=nand3);
+    Nand(a=nand2, b=nand3, out=nand4);
+    Nand(a=nand4, b=nand4, out=out);
+}

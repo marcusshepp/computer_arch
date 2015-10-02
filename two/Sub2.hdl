@@ -1,0 +1,6 @@
+CHIP Sub2 {
+  IN x[2], y[2];
+  OUT out[2];
+
+  PARTS:
+}

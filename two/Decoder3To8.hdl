@@ -1,0 +1,8 @@
+CHIP Decoder3To8 {
+  IN x[3];
+  OUT out[8];
+
+  PARTS:
+
+
+}
