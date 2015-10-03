@@ -3,7 +3,13 @@ CHIP BRShift4 {
   OUT out[4];
 
   PARTS:
-
-
-
+  Mux(a=bitoneout, b=in[0], sel=load, out=muxzeroout);
+  Mux(a=bittwoout, b=in[1], sel=load, out=muxoneout);
+  Mux(a=bitthreeout, b=in[2], sel=load, out=muxtwoout);
+  Mux(a=bitzeroout, b=in[3], sel=load, out=muxthreeout);
+  Or(a=load, b=shift, out=loadorshift);
+  Bit(in=muxzeroout, load=loadorshift, out=bitzeroout, out=out[0]);
+  Bit(in=muxoneout, load=loadorshift, out=bitoneout, out=out[1]);
+  Bit(in=muxtwoout, load=loadorshift, out=bittwoout, out=out[2]);
+  Bit(in=muxthreeout, load=loadorshift, out=bitthreeout, out=out[3]);
 }
