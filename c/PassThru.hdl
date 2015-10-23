@@ -1,0 +1,7 @@
+CHIP PassThru {
+  IN in;
+  OUT out;
+ 
+  PARTS:
+  Or(a=in, b=in, out=out);
+}

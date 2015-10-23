@@ -1,0 +1,45 @@
+/**
+* This chip defines all control logic for the HACK CPU.
+* It decodes the instruction coming in on the instruction bus
+*  and then asserts the appropriate values on the output pins
+*  based on how the HACK CPU should operate.  The output pins
+*  should be directly connected to the other CPU components.
+*/
+
+CHIP ControlUnit {
+  IN instruction[16];
+  OUT
+    zx, // These 6 pins will control the ALU and should
+    nx, //   map over directly (i.e., the zx output of this
+    zy, //   chip should tie into the zx pin of the ALU
+    ny,
+    f,
+    no,
+    writeM,      // Set to 1 if the load bit of RAM should be set
+    loadA,       // Set to 1 if the load pin on Register A should be set
+    loadD,       // Set to 1 if the load pin on Register D should be set
+    selectorAOrM, // Set to 1 if the contents of memory should be routed to ALU
+    selectorInstOrALUout; // Set to 1 if the instruction bus shold be routed
+                          //   to the in bus of register A.
+
+  PARTS:
+
+    // Handle zx, nx, ny, ny, f, no
+      /** NB, to pass-thru values from an input pin directly to an output pin
+       *   use the PassThru chip packaged with the template */
+    Not(in=instruction[15], out=notinst15);
+    PassThru(in=notinst15, out=selectorInstOrALUout);
+    PassThru(in=instruction[12], out=selectorAOrM);
+    PassThru(in=instruction[11], out=zx);
+    PassThru(in=instruction[10], out=nx);
+    PassThru(in=instruction[9], out=zy);
+    PassThru(in=instruction[8], out=ny);
+    PassThru(in=instruction[7], out=f);
+    PassThru(in=instruction[6], out=no);
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    And(a=instruction[15], b=instruction[3], out=writeM);
+    And(a=instruction[15], b=instruction[5], out=prt1);
+    Not(in=instruction[15], out=notinstr15);
+    Or(a=notinstr15, b=prt1, out=loadA);
+
+}
