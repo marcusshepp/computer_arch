@@ -12,6 +12,9 @@ class Parser(object):
         Pass all commands into an array.
         """
         self.current_cmd = 0
+        self.cmds = []
+        with open(input_file, "r") as code_file:
+            
 
     def has_more_cmds(self):
         """
