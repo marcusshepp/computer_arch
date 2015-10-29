@@ -1,0 +1,36 @@
+  @SP
+  M=0
+  @LCL
+  M=1
+  @THIS
+  M=0
+  @THAT
+  M=1
+  @i
+  @MIDDLE
+  @R0
+  @R1
+  @R2
+  @R3
+  @R4
+  @R5
+  @R6
+  @R7
+(MIDDLE)
+  @crazy_valid_var_$.:
+  @R8
+  @R9
+  @R10
+  @R11
+  @R12
+  @R13
+  @R14
+  @R15
+  @SCREEN
+  @KBD
+  @15
+  D=A
+  @i
+(END)
+  @END
+  0;JMP
