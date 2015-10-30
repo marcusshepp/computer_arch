@@ -1,3 +1,6 @@
+import re
+
+
 class Parser(object):
     """
     Encapsulates access to the input code. Reads an assembly
@@ -11,17 +14,24 @@ class Parser(object):
         thought a command line arg.
         Pass all commands into an array.
         """
-        self.current_cmd = 0
-        self.cmds = []
+        self.command_index = 0
         with open(input_file, "r") as code_file:
-            
+            self.cmds = [line.strip() for line in code_file]
+            for index, line in enumerate(self.cmds):
+                line = re.sub(r"//.*$", "", line)
+                self.cmds[index] = re.sub(r"\s.*$", "", line)
+        self.cmds = [line for line in self.cmds if line != ""]
+        print self.cmds
+        self.current_cmd = self.cmds[self.command_index]
 
     def has_more_cmds(self):
         """
         Are there more commands in the input?
         :return: boolean
         """
-        pass
+        if len(self.cmds) <= (self.command_index + 1):
+            return True
+        else: return False
 
     def advance(self):
         """
@@ -31,7 +41,7 @@ class Parser(object):
         Initially there is no command.
         :return: None
         """
-        pass
+        self.command_index += 1
 
     def command_type(self):
         """
@@ -41,11 +51,12 @@ class Parser(object):
         - C_COMMAND for dest=comp;jump
         - L_COMMAND for where xxx is a symbol.
         """
-        if self.current_cmd[0] == "@":
-            return "A_COMMAND"
-        elif self.current_cmd[0] == "(":
-            return "L_COMMAND"
-        elif self.current_cmd[0] == "M" or self.current_cmd[0] == "D":
+        commands = {"@": "A_COMMAND",
+                    "(": "L_COMMAND",
+                    "M": "C_COMMAND",}
+        if self.current_cmd[0] in commands: # pythonic solution?
+            return commands[self.current_cmd[0]]
+        elif self.current_cmd[0] == "D":
             return "C_COMMAND"
 
     def symbol(self):
@@ -53,8 +64,13 @@ class Parser(object):
         :return: the symbol or decimal xxx of
         current cmd @xxx or (xxx). Should be called only when
         command_type() returns A_COMMAND or L_COMMAND.
+        ie. "LOOP" or "i"
         """
-        pass
+        cc = self.current_cmd
+        cc = re.sub(r"\(", "", cc)
+        cc = re.sub(r"\)", "", cc)
+        cc = re.sub(r"@", "", cc)
+        return cc
 
     def dest(self):
         """
@@ -62,15 +78,31 @@ class Parser(object):
         (8 possibilites). Should be called only when
         command_type() is C.
         """
-        pass
+        find = re.compile(r"^[^=]*") # everything before "="
+        dest = re.search(find, self.current_cmd).group(0)
+        return dest
 
     def comp(self):
         """
         :return: the comp mnemonic in the current C-command
-        (28 possibilites). SHould only be called when
+        (28 possibilites). Should only be called when
         command_type() returns C.
         """
-        pass
+        cc = self.current_cmd
+        equals, semi = 0
+        comp = []
+        for i, v in enumerate(cc):
+            if v == "=":
+                equals += (i + 1)
+            elif v == ";":
+                semi += i
+        if "=" in cc and ";" in cc:
+            for v in cc[equals:semi]:
+                comp.append(v)
+        elif "=" in cc:
+            for v in cc[equals:]:
+                comp.append(v)
+        return "".join(comp)
 
     def jump(self):
         """
@@ -78,4 +110,12 @@ class Parser(object):
         (8 possibilites). SHould only be called when
         command_type() returns C.
         """
-        pass
+        cc = self.current_cmd
+        jump = []
+        the_index_to_start = 0
+        for i, v in enumerate(cc):
+            if v == ";":
+                the_index_to_start = (i - 1)
+        for v in cc[the_index_to_start:]:
+            jump.append(v)
+        return "".join(jump)
