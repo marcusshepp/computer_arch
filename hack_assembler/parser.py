@@ -107,7 +107,7 @@ class Parser(object):
     def jump(self):
         """
         :return: the jump mnemonic in the current C-command
-        (8 possibilites). SHould only be called when
+        (8 possibilites). Should only be called when
         command_type() returns C.
         """
         cc = self.current_cmd
