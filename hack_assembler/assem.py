@@ -31,11 +31,12 @@ if __name__ == "__main__":
             comp = code_obj.comp(comp)
             print comp
             ML.append(comp)
-            jump = parsed.jump()
-            print jump
-            jump = code_obj.jump(jump)
-            print jump
-            ML.append(jump)
+            if parsed.jump() != "":
+                jump = parsed.jump()
+                print jump
+                jump = code_obj.jump(jump)
+                print jump
+                ML.append(jump)
         parsed.advance()
     print "ML: ", ML
     for line in ML:

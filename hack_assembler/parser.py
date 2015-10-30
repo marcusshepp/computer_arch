@@ -41,8 +41,8 @@ class Parser(object):
         :return: None
         """
         print "cmd_index: ", self.command_index
-        print "current command: ", self.cmds[self.command_index]
         self.command_index += 1
+        print "current command: ", self.cmds[self.command_index]
 
     def command_type(self):
         """
@@ -125,7 +125,11 @@ class Parser(object):
         for i, v in enumerate(cc):
             if v == ";":
                 the_index_to_start = (i - 1)
-        for v in cc[the_index_to_start:]:
-            jump.append(v)
-        print "resulting jump: ", "".join(jump)
-        return "".join(jump)
+        if i != 0:
+            for v in cc[the_index_to_start:]:
+                jump.append(v)
+                print "resulting jump: ", "".join(jump)
+                return "".join(jump)
+        else: return ""
+            
+        
