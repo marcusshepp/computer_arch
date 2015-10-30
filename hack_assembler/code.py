@@ -18,6 +18,7 @@ class Code(object):
                     "AM": 5,
                     "AD": 6,
                     "AMD": 7}
+        print "dest ML: ", self.ml(choices[mnemonic])[2:]
         return self.ml(choices[mnemonic])[2:]
 
     def comp(self, mnemonic):
@@ -53,6 +54,7 @@ class Code(object):
                 choices = {"!A": 49}
             else:
                 choices = {"0": 58, "1": 14, "D": 12, "A": 48}
+        print "comp ML: ", self.ml(choices[mnemonic])[2:]
         return self.ml(choices[mnemonic])[2:]
 
     def jump(self, mnemonic):
@@ -71,4 +73,8 @@ class Code(object):
             "JLE": 6,
             "JMP": 7,
         }
-        return self.ml(choices[mnemonic])[2:]
+        cmd = self.ml(choices[mnemonic])
+        if cmd != 0:
+            print "jump ML: ", self.ml(choices[mnemonic])[2:]
+            return self.ml(choices[mnemonic])[2:]
+        else: return self.ml(choices[mnemonic])

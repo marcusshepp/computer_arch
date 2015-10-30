@@ -22,14 +22,13 @@ class Parser(object):
                 self.cmds[index] = re.sub(r"\s.*$", "", line)
         self.cmds = [line for line in self.cmds if line != ""]
         print self.cmds
-        self.current_cmd = self.cmds[self.command_index]
 
     def has_more_cmds(self):
         """
         Are there more commands in the input?
         :return: boolean
         """
-        if len(self.cmds) <= (self.command_index + 1):
+        if len(self.cmds) >= (self.command_index + 1):
             return True
         else: return False
 
@@ -41,6 +40,8 @@ class Parser(object):
         Initially there is no command.
         :return: None
         """
+        print "cmd_index: ", self.command_index
+        print "current command: ", self.cmds[self.command_index]
         self.command_index += 1
 
     def command_type(self):
@@ -54,9 +55,13 @@ class Parser(object):
         commands = {"@": "A_COMMAND",
                     "(": "L_COMMAND",
                     "M": "C_COMMAND",}
-        if self.current_cmd[0] in commands: # pythonic solution?
-            return commands[self.current_cmd[0]]
-        elif self.current_cmd[0] == "D":
+        cc = self.cmds[self.command_index]
+        print "parser 59: ", cc[0]
+        if cc[0] in commands:
+            return commands[cc[0]]
+        elif cc[0] == "D":
+            return "C_COMMAND"
+        elif cc[0] == "0":
             return "C_COMMAND"
 
     def symbol(self):
@@ -66,11 +71,12 @@ class Parser(object):
         command_type() returns A_COMMAND or L_COMMAND.
         ie. "LOOP" or "i"
         """
-        cc = self.current_cmd
+        cc = self.cmds[self.command_index]
         cc = re.sub(r"\(", "", cc)
         cc = re.sub(r"\)", "", cc)
         cc = re.sub(r"@", "", cc)
-        return cc
+        print "resulting symbol: ", "".join(cc)
+        return str(cc)
 
     def dest(self):
         """
@@ -78,8 +84,10 @@ class Parser(object):
         (8 possibilites). Should be called only when
         command_type() is C.
         """
+        cc = self.cmds[self.command_index]
         find = re.compile(r"^[^=]*") # everything before "="
-        dest = re.search(find, self.current_cmd).group(0)
+        dest = re.search(find, cc).group(0)
+        print "resulting dest: ", "".join(dest)
         return dest
 
     def comp(self):
@@ -88,8 +96,8 @@ class Parser(object):
         (28 possibilites). Should only be called when
         command_type() returns C.
         """
-        cc = self.current_cmd
-        equals, semi = 0
+        cc = self.cmds[self.command_index]
+        equals, semi = 0, 0
         comp = []
         for i, v in enumerate(cc):
             if v == "=":
@@ -102,6 +110,7 @@ class Parser(object):
         elif "=" in cc:
             for v in cc[equals:]:
                 comp.append(v)
+        print "resulting comp: ", "".join(comp)
         return "".join(comp)
 
     def jump(self):
@@ -110,7 +119,7 @@ class Parser(object):
         (8 possibilites). Should only be called when
         command_type() returns C.
         """
-        cc = self.current_cmd
+        cc = self.cmds[self.command_index]
         jump = []
         the_index_to_start = 0
         for i, v in enumerate(cc):
@@ -118,4 +127,5 @@ class Parser(object):
                 the_index_to_start = (i - 1)
         for v in cc[the_index_to_start:]:
             jump.append(v)
+        print "resulting jump: ", "".join(jump)
         return "".join(jump)
