@@ -18,7 +18,12 @@ for line in parsed.cmds:
         symboltable.add(line, rom_address + 1)
 
 Second pass:
-
+for line in cmds do
+    if line is symbol do
+        if symbol in ST 
+            ST.replace(symbol, numeric value) && complete traslation
+        else:
+            ST.add(symbol, RAMADDRESS from 16 on)
 
 """
 
