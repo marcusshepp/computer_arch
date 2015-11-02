@@ -64,6 +64,26 @@ class Parser(object):
         elif cc[0] == "0":
             return "C_COMMAND"
 
+    def cc_is_symbol(self):
+        """
+        True if current command is symbol else false
+        """
+        cc = self.cmds[self.command_index]
+        m = re.search(r'\d+$', cc)
+        # if the string ends in digits
+        if m:
+            return False
+        else: return True
+
+
+    def cc_is_int(self):
+        cc = self.cmds[self.command_index]
+        m = re.search(r'\d+$', cc)
+        # if the string ends in digits
+        if m:
+            return True
+        else: return False
+
     def symbol(self):
         """
         :return: the symbol or decimal xxx of
@@ -131,5 +151,3 @@ class Parser(object):
                 print "resulting jump: ", "".join(jump)
                 return "".join(jump)
         else: return ""
-            
-        
