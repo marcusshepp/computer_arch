@@ -44,6 +44,12 @@ class Parser(object):
         self.command_index += 1
         print "current command: ", self.cmds[self.command_index]
 
+    def reset(self):
+        """
+        Self-explainitory.
+        """
+        self.command_index = 0
+
     def command_type(self):
         """
         :return: type of current cmd:
@@ -140,14 +146,13 @@ class Parser(object):
         command_type() returns C.
         """
         cc = self.cmds[self.command_index]
-        jump = []
-        the_index_to_start = 0
-        for i, v in enumerate(cc):
-            if v == ";":
-                the_index_to_start = (i - 1)
-        if i != 0:
-            for v in cc[the_index_to_start:]:
+        there = ";" in cc
+        if not there:
+            return False
+        else:
+            jump = []
+            indextostart = cc.index(";") + 1
+            for v in cc[indextostart:]:
                 jump.append(v)
-                print "resulting jump: ", "".join(jump)
-                return "".join(jump)
-        else: return ""
+            print "resulting jump: ", "".join(jump)
+            return "".join(jump)

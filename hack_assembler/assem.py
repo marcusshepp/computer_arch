@@ -20,7 +20,7 @@ for line in parsed.cmds:
 Second pass:
 for line in cmds do
     if line is symbol do
-        if symbol in ST 
+        if symbol in ST
             ST.replace(symbol, numeric value) && complete traslation
         else:
             ST.add(symbol, RAMADDRESS from 16 on)
@@ -34,34 +34,18 @@ if __name__ == "__main__":
     input_file = sys.argv[1]
     parsed = Parser(input_file)
     ML = []
+    rom_address = 0
     # with open("{0}.hack".format(input_file), "w") as resulting_file:
-
     while parsed.has_more_cmds():
-        print parsed.has_more_cmds()
-        ct = parsed.command_type()
-        print ct
-        if ct == "A_COMMAND" or ct == "L_COMMAND":
-            symbol = parsed.symbol()
-            print symbol
-        else:
-            # C - Command
-            dest = parsed.dest()
-            print dest
-            dest = code_obj.dest(dest)
-            print dest
-            ML.append(dest)
-            comp = parsed.comp()
-            print comp
-            comp = code_obj.comp(comp)
-            print comp
-            ML.append(comp)
-            if parsed.jump() != "":
-                jump = parsed.jump()
-                print jump
-                jump = code_obj.jump(jump)
-                print jump
-                ML.append(jump)
+        if parsed.command_type() == "C_COMMAND" or parsed.command_type() == "A_COMMAND":
+            st.add_entry(parsed.cmds[parsed.command_index], rom_address)
+            rom_address += 1
+        elif parsed.command_type() == "L_COMMAND":
+            st.add_entry(parsed.cmds[parsed.command_index], rom_address + 1)
         parsed.advance()
+    
+    while parsed.has_more_cmds():
+
     print "ML: ", ML
     for line in ML:
         print "line: ", line
