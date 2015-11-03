@@ -10,14 +10,14 @@ class SymbolTable(object):
         """
         self.table[symbol] = address
     
-    def contains(symbol):
+    def contains(self, symbol):
         """ Does the symbol table contain this value? """
         b = False
         if symbol in self.table:
             b = True
         return b
     
-    def get_address(symbol):
+    def get_address(self, symbol):
         """
         Returns the address associated with the symbol.
         """

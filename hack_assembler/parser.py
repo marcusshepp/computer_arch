@@ -21,7 +21,7 @@ class Parser(object):
                 line = re.sub(r"//.*$", "", line)
                 self.cmds[index] = re.sub(r"\s.*$", "", line)
         self.cmds = [line for line in self.cmds if line != ""]
-        print self.cmds
+        # print self.cmds
 
     def has_more_cmds(self):
         """
@@ -40,16 +40,19 @@ class Parser(object):
         Initially there is no command.
         :return: None
         """
-        print "cmd_index: ", self.command_index
+        # print "cmd_index: ", self.command_index
         self.command_index += 1
-        print "current command: ", self.cmds[self.command_index]
+        # print "current command: ", self.cmds[self.command_index]
 
     def reset(self):
         """
         Self-explainitory.
         """
         self.command_index = 0
-
+    
+    def cc(self):
+        return self.cmds[self.command_index]
+    
     def command_type(self):
         """
         :return: type of current cmd:
@@ -62,7 +65,7 @@ class Parser(object):
                     "(": "L_COMMAND",
                     "M": "C_COMMAND",}
         cc = self.cmds[self.command_index]
-        print "parser 59: ", cc[0]
+        # print "parser 59: ", cc[0]
         if cc[0] in commands:
             return commands[cc[0]]
         elif cc[0] == "D":
@@ -101,7 +104,7 @@ class Parser(object):
         cc = re.sub(r"\(", "", cc)
         cc = re.sub(r"\)", "", cc)
         cc = re.sub(r"@", "", cc)
-        print "resulting symbol: ", "".join(cc)
+        # print "resulting symbol: ", "".join(cc)
         return str(cc)
 
     def dest(self):
@@ -113,7 +116,7 @@ class Parser(object):
         cc = self.cmds[self.command_index]
         find = re.compile(r"^[^=]*") # everything before "="
         dest = re.search(find, cc).group(0)
-        print "resulting dest: ", "".join(dest)
+        # print "resulting dest: ", "".join(dest)
         return dest
 
     def comp(self):
@@ -136,7 +139,7 @@ class Parser(object):
         elif "=" in cc:
             for v in cc[equals:]:
                 comp.append(v)
-        print "resulting comp: ", "".join(comp)
+        # print "resulting comp: ", "".join(comp)
         return "".join(comp)
 
     def jump(self):
@@ -154,5 +157,5 @@ class Parser(object):
             indextostart = cc.index(";") + 1
             for v in cc[indextostart:]:
                 jump.append(v)
-            print "resulting jump: ", "".join(jump)
+            # print "resulting jump: ", "".join(jump)
             return "".join(jump)
