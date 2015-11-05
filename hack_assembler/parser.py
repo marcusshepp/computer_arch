@@ -21,7 +21,10 @@ class Parser(object):
                 line = re.sub(r"//.*$", "", line)
                 self.cmds[index] = re.sub(r"\s.*$", "", line)
         self.cmds = [line for line in self.cmds if line != ""]
-        print self.cmds
+        # print self.cmds
+
+    def cc(self):
+        return self.cmds[self.command_index]
 
     def has_more_cmds(self):
         """
@@ -40,9 +43,9 @@ class Parser(object):
         Initially there is no command.
         :return: None
         """
-        print "cmd_index: ", self.command_index
+#         print "cmd_index: ", self.command_index
+#         print "current command: ", self.cmds[self.command_index]
         self.command_index += 1
-        print "current command: ", self.cmds[self.command_index]
 
     def reset(self):
         """
@@ -58,17 +61,17 @@ class Parser(object):
         - C_COMMAND for dest=comp;jump
         - L_COMMAND for where xxx is a symbol.
         """
-        commands = {"@": "A_COMMAND",
-                    "(": "L_COMMAND",
-                    "M": "C_COMMAND",}
         cc = self.cmds[self.command_index]
-        print "parser 59: ", cc[0]
-        if cc[0] in commands:
-            return commands[cc[0]]
-        elif cc[0] == "D":
+        l_command = lambda i : i.find('(') != -1 and i.find(')') != -1
+        a_command = lambda i : i.find('@') != -1
+        c_command = lambda i : i.find("(") == -1 and i.find("@") == -1
+        if l_command(cc):
+            return "L_COMMAND"
+        elif a_command(cc):
+            return "A_COMMAND"
+        elif c_command(cc):
             return "C_COMMAND"
-        elif cc[0] == "0":
-            return "C_COMMAND"
+
 
     def cc_is_symbol(self):
         """
@@ -76,8 +79,10 @@ class Parser(object):
         """
         cc = self.cmds[self.command_index]
         m = re.search(r'\d+$', cc)
+        jump = ";" in cc
         # if the string ends in digits
-        if m:
+        # or has a semi
+        if m or jump:
             return False
         else: return True
 
@@ -101,7 +106,7 @@ class Parser(object):
         cc = re.sub(r"\(", "", cc)
         cc = re.sub(r"\)", "", cc)
         cc = re.sub(r"@", "", cc)
-        print "resulting symbol: ", "".join(cc)
+#         print "resulting symbol: ", "".join(cc)
         return str(cc)
 
     def dest(self):
@@ -113,7 +118,7 @@ class Parser(object):
         cc = self.cmds[self.command_index]
         find = re.compile(r"^[^=]*") # everything before "="
         dest = re.search(find, cc).group(0)
-        print "resulting dest: ", "".join(dest)
+#         print "resulting dest: ", "".join(dest)
         return dest
 
     def comp(self):
@@ -136,7 +141,7 @@ class Parser(object):
         elif "=" in cc:
             for v in cc[equals:]:
                 comp.append(v)
-        print "resulting comp: ", "".join(comp)
+#         print "resulting comp: ", "".join(comp)
         return "".join(comp)
 
     def jump(self):
@@ -154,5 +159,5 @@ class Parser(object):
             indextostart = cc.index(";") + 1
             for v in cc[indextostart:]:
                 jump.append(v)
-            print "resulting jump: ", "".join(jump)
+#             print "resulting jump: ", "".join(jump)
             return "".join(jump)
