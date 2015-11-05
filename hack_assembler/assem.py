@@ -12,7 +12,6 @@ First pass:
 rom_address = o
 for line in parsed.cmds:
     if parsed.command_type() is "C" or "A":
-        symboltable.add(line, rom_address)
         rom_address += 1
     elif parsed.command_type() is "L":
         symboltable.add(line, rom_address + 1)
@@ -49,8 +48,6 @@ def to_binary(line, cmdtype, symboltable):
         dest = c.dest(line)
         jump = c.jump(line)
         return pad + a_bit + comp + dest + jump
-
-
 
 i = ["@0",
      "D=M",

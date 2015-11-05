@@ -43,8 +43,6 @@ class Parser(object):
         Initially there is no command.
         :return: None
         """
-#         print "cmd_index: ", self.command_index
-#         print "current command: ", self.cmds[self.command_index]
         self.command_index += 1
 
     def reset(self):
@@ -52,6 +50,9 @@ class Parser(object):
         Self-explainitory.
         """
         self.command_index = 0
+
+    def cc(self):
+        return self.cmds[self.command_index]
 
     def command_type(self):
         """
@@ -70,8 +71,6 @@ class Parser(object):
         elif a_command(cc):
             return "A_COMMAND"
         elif c_command(cc):
-            return "C_COMMAND"
-
 
     def cc_is_symbol(self):
         """
@@ -106,7 +105,6 @@ class Parser(object):
         cc = re.sub(r"\(", "", cc)
         cc = re.sub(r"\)", "", cc)
         cc = re.sub(r"@", "", cc)
-#         print "resulting symbol: ", "".join(cc)
         return str(cc)
 
     def dest(self):
@@ -118,7 +116,6 @@ class Parser(object):
         cc = self.cmds[self.command_index]
         find = re.compile(r"^[^=]*") # everything before "="
         dest = re.search(find, cc).group(0)
-#         print "resulting dest: ", "".join(dest)
         return dest
 
     def comp(self):
@@ -141,7 +138,6 @@ class Parser(object):
         elif "=" in cc:
             for v in cc[equals:]:
                 comp.append(v)
-#         print "resulting comp: ", "".join(comp)
         return "".join(comp)
 
     def jump(self):
@@ -159,5 +155,4 @@ class Parser(object):
             indextostart = cc.index(";") + 1
             for v in cc[indextostart:]:
                 jump.append(v)
-#             print "resulting jump: ", "".join(jump)
             return "".join(jump)

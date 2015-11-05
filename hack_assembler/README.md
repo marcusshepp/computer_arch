@@ -1,6 +1,7 @@
 An Assembler written in plan Python.
 
 in: HACK assembly
+
 out: HACK machine language
 
 * note *
