@@ -1,7 +1,7 @@
 #!/usr/bin/python
-#################
+##################################
 # Alternate Hack assembler
-#################
+##################################
 
 import sys, os
 
@@ -22,7 +22,6 @@ def main(debug, b_reg):
     if len(sys.argv) < 2:
         no_file_arg()
     input_file = sys.argv[1]
-    # name = "debug"
     name = os.path.splitext(input_file)[0]
     parsed = Parser(input_file, debug, b_reg)
     rom_address = 0

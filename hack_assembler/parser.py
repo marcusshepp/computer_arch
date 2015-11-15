@@ -46,8 +46,17 @@ class Parser(object):
         """
         cc = self.cc()
         if "B" in cc:
+            if "A" in cc:
+                b = cc.find("B")
+                if len(cc) < b + 1:
+                    if cc[b + 1] == "=": # dest is b
+                        self.pad = "110"
+                else: self.pad = "101"
+            else:
+                self.pad = "101"
             self.cmds[self.command_index] = cc.replace("B", "D")
-            return self.cmds[self.command_index]
+        else:
+            self.pad = "111"
         return self.cmds[self.command_index]
 
     def has_more_cmds(self):
@@ -197,7 +206,6 @@ class Parser(object):
         out: binary equivelant
         """
         if cmdtype == "C_COMMAND":
-            print line
             the_a_bit = self.a_bit_method(line)
             _semi = ";" in line
             equals = "=" in line
@@ -233,10 +241,7 @@ class Parser(object):
         """
         the_a_bit = self.a_bit_method(line)
         equals = line.find("=")
-        if self.b_reg and self.b_cc:
-            p = "110"
-        else: p = self.pad
-        return p + the_a_bit + self.c.comp(line[equals + 1:]) + self.c.dest(line[:equals]) + self.null
+        return self.pad + the_a_bit + self.c.comp(line[equals + 1:]) + self.c.dest(line[:equals]) + self.null
 
     def semi(self, line):
         """
@@ -269,7 +274,6 @@ class Parser(object):
         in: current command
         out: a bit for a c command
         """
-        print line
         num = line.find("M")
         if num == -1:
             return "0"

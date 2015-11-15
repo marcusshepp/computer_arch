@@ -8,21 +8,34 @@ out: HACK machine language
     - is specific to the HACK machine only.
 
 
+-------------------
+
+
 Requirements:
+
 - Python2.7
+
+
+-------------------
 
 
 Quick Start:
 
--------------------
-
-
 Unmodified Hack CPU
-`python assem.py <program>.asm`
-
-
--------------------
+`python Assembler.py <program>.asm`
 
 
 Modified Hack CPU
-`python altern_assem.py <program>.asm`
+`python ModAssembler.py <program>.asm`
+
+
+-------------------
+
+
+Credits:
+
+
+Written By: Marcus Shepherd
+Class: Computer Architecture (CS, BS)
+Instructor: Dr. Eickholt
+Date: 11/15/15

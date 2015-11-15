@@ -1,7 +1,7 @@
 #!/usr/bin/python
-#################
+##################################
 # Hack assembly to Hack machine language
-#################
+##################################
 
 import sys, os
 
@@ -11,7 +11,7 @@ from utils import create_file, no_file_arg
 
 DEBUG = False
 
-def main(d):
+def main(debeg):
     """
     in: bool debug
     out: void
@@ -21,14 +21,11 @@ def main(d):
     if len(sys.argv) < 2:
         no_file_arg()
     input_file = sys.argv[1]
-    name = "debug"
     name = os.path.splitext(input_file)[0]
-    parsed = Parser(input_file, d)
-    i = ["D|A",
-         "D&A"]
-    parsed = Parser(input_file, d)
+    parsed = Parser(input_file, debug)
     rom_address = 0
     ram_address = 16
+
     """
     First pass
     """
@@ -46,8 +43,6 @@ def main(d):
     while parsed.has_more_cmds():
         cc = parsed.cc()
         command_type = parsed.command_type()
-        print cc
-        print command_type
         if command_type == "A_COMMAND":
             """
             Handle A commands.
