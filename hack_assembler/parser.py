@@ -1,5 +1,5 @@
 import re
-
+from code import Code as C
 
 class Parser(object):
     """
@@ -8,28 +8,52 @@ class Parser(object):
     command's components (fields and symbols). In addition,
     removes all white space and comments.
     """
-    def __init__(self, input_file):
+    def __init__(self, in_, debug=False, b_reg=False):
         """
         Input file is passed to this object
         thought a command line arg.
         Pass all commands into an array.
         """
         self.command_index = 0
-        with open(input_file, "r") as code_file:
-            self.cmds = [line.strip() for line in code_file]
-            for index, line in enumerate(self.cmds):
-                line = re.sub(r"//.*$", "", line)
-                self.cmds[index] = re.sub(r"\s.*$", "", line)
-        self.cmds = [line for line in self.cmds if line != ""]
-        # print self.cmds
+        if debug:
+            self.cmds = in_
+        else:
+            with open(in_, "r") as code_file:
+                self.cmds = [line.strip() for line in code_file]
+                for index, line in enumerate(self.cmds):
+                    line = re.sub(r"//.*$", "", line)
+                    self.cmds[index] = re.sub(r"\s.*$", "", line)
+            self.cmds = [line for line in self.cmds if line != ""]
+        self.c = C()
+        if b_reg:
+            self.b_reg = b_reg
+            self.pad = "110"
+        else:
+            self.pad = "111"
+        self.null = "000"
 
     def cc(self):
+        """
+        in: none
+        out: current command
+        """
+        return self.cmds[self.command_index]
+
+    def b_cc(self):
+        """
+        in: none
+        out: modified current command with b reg
+        """
+        cc = self.cc()
+        if "B" in cc:
+            self.cmds[self.command_index] = cc.replace("B", "D")
+            return self.cmds[self.command_index]
         return self.cmds[self.command_index]
 
     def has_more_cmds(self):
         """
-        Are there more commands in the input?
-        :return: boolean
+        in: none
+        out: whether or not there are more commands
         """
         if len(self.cmds) >= (self.command_index + 1):
             return True
@@ -52,6 +76,10 @@ class Parser(object):
         self.command_index = 0
 
     def cc(self):
+        """
+        in: none
+        out: string value of current command
+        """
         return self.cmds[self.command_index]
 
     def command_type(self):
@@ -71,6 +99,7 @@ class Parser(object):
         elif a_command(cc):
             return "A_COMMAND"
         elif c_command(cc):
+            return "C_COMMAND"
 
     def cc_is_symbol(self):
         """
@@ -85,14 +114,18 @@ class Parser(object):
             return False
         else: return True
 
-
     def cc_is_int(self):
+        """
+        in: none
+        out: bool is current command integer
+        """
         cc = self.cmds[self.command_index]
         m = re.search(r'\d+$', cc)
         # if the string ends in digits
-        if m:
-            return True
-        else: return False
+        contains_char = any([i.isalpha() for i in cc[1:]])
+        if contains_char:
+            return False
+        elif m: return True
 
     def symbol(self):
         """
@@ -156,3 +189,98 @@ class Parser(object):
             for v in cc[indextostart:]:
                 jump.append(v)
             return "".join(jump)
+
+    def c_to_binary(self, line, cmdtype, symboltable):
+        """
+        converts a c command to binary
+        in: current command, command type, symboltable
+        out: binary equivelant
+        """
+        if cmdtype == "C_COMMAND":
+            print line
+            the_a_bit = self.a_bit_method(line)
+            _semi = ";" in line
+            equals = "=" in line
+            if _semi and equals: # dest = comp ; jump
+                return self.semi_eq(line)
+            elif equals:
+                return self.eq(line)
+            elif _semi:
+                return self.semi(line)
+            elif not equals and not _semi:
+                return self.comp_only(line)
+            else:
+                try:
+                    int(line)
+                    return self.a_int_to_binary(line)
+                except ValueError:
+                    return self.a_int_to_binary(self.c.comp(line))
+
+    def semi_eq(self, line):
+        """
+        in: current command
+        out: c command with semi and equals into binary
+        """
+        the_a_bit = self.a_bit_method(line)
+        semi = line.find(";")
+        equals = line.find("=")
+        return self.pad + the_a_bit + self.c.comp(line[equals + 1: semi]) + self.c.dest(line[:equals]) + self.c.jump(line[semi + 1:])
+
+    def eq(self, line):
+        """
+        in: current command
+        out: c command with equals into binary
+        """
+        the_a_bit = self.a_bit_method(line)
+        equals = line.find("=")
+        if self.b_reg and self.b_cc:
+            p = "110"
+        else: p = self.pad
+        return p + the_a_bit + self.c.comp(line[equals + 1:]) + self.c.dest(line[:equals]) + self.null
+
+    def semi(self, line):
+        """
+        in: current command
+        out: c command with semi into binary
+        """
+        the_a_bit = self.a_bit_method(line)
+        semi = line.find(";")
+        try:
+            return self.pad + the_a_bit + self.c.comp(line[:semi]) + "000" + self.c.jump(line[semi + 1:])
+        except KeyError:
+            return self.pad + the_a_bit + "000000" + self.c.dest(line[:semi]) + self.c.jump(line[semi + 1:])
+
+    def a_int_to_binary(self, line):
+        """
+        in: current command
+        out: a command with an integer value to binary.
+        """
+        number = str(line)
+        if "@" in number:
+            number = number[1:]
+        number = str(bin(int(number)))[2:]
+        diff = abs(len(number) - 16)
+        pad = ["0" for count in range(diff)]
+        pad = "".join(pad)
+        return pad + number
+
+    def a_bit_method(self, line):
+        """
+        in: current command
+        out: a bit for a c command
+        """
+        print line
+        num = line.find("M")
+        if num == -1:
+            return "0"
+        else:
+            if line.find("J") + 1 == num:
+                return "0"
+            return "1"
+
+    def comp_only(self, line):
+        """
+        in: current command
+        out: c command with a comp only instruction
+        """
+        return self.pad + self.c.comp(line) + self.null + self.null

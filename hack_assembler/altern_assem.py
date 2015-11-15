@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #################
-# Hack assembly to Hack machine language
+# Alternate Hack assembler
 #################
 
 import sys, os
@@ -10,10 +10,11 @@ from symboltable import SymbolTable
 from utils import create_file, no_file_arg
 
 DEBUG = False
+B_REG = True
 
-def main(d):
+def main(debug, b_reg):
     """
-    in: bool debug
+    in: bool debug, bool b register
     out: void
     """
     ML = []
@@ -21,12 +22,9 @@ def main(d):
     if len(sys.argv) < 2:
         no_file_arg()
     input_file = sys.argv[1]
-    name = "debug"
+    # name = "debug"
     name = os.path.splitext(input_file)[0]
-    parsed = Parser(input_file, d)
-    i = ["D|A",
-         "D&A"]
-    parsed = Parser(input_file, d)
+    parsed = Parser(input_file, debug, b_reg)
     rom_address = 0
     ram_address = 16
     """
@@ -43,11 +41,10 @@ def main(d):
     """
     Second pass
     """
+    i = 0
     while parsed.has_more_cmds():
-        cc = parsed.cc()
+        cc = parsed.b_cc() # account for b reg
         command_type = parsed.command_type()
-        print cc
-        print command_type
         if command_type == "A_COMMAND":
             """
             Handle A commands.
@@ -63,8 +60,9 @@ def main(d):
         else:
             ML.append(parsed.c_to_binary(cc, command_type, st))
         parsed.advance()
+        i += 1
     create_file(ML, name)
 
 
 if __name__ == "__main__":
-    main(DEBUG)
+    main(DEBUG, B_REG)
