@@ -45,6 +45,7 @@ class Parser(object):
         if b_reg:
             self.b_reg = b_reg
             self.pad = "110"
+            self.b_is_dest = False # when b register in destination
         else:
             self.pad = "111"
         self.null = "000"
@@ -65,9 +66,10 @@ class Parser(object):
         if "B" in cc:
             if "A" in cc:
                 b = cc.find("B")
-                if len(cc) < b + 1:
-                    if cc[b + 1] == "=": # dest is b
-                        self.pad = "110"
+                eq = cc.find("=")
+                if b < eq: # dest is b
+                    self.pad = "110"
+                    self.b_is_dest = True
                 else: self.pad = "101"
             else:
                 self.pad = "101"
@@ -258,7 +260,11 @@ class Parser(object):
         """
         the_a_bit = self.a_bit_method(line)
         equals = line.find("=")
-        return self.pad + the_a_bit + self.c.comp(line[equals + 1:]) + self.c.dest(line[:equals]) + self.null
+        if self.b_reg and self.b_is_dest:
+            _dest = "000"
+            self.b_is_dest = False
+        else: _dest = self.c.dest(line[:equals])
+        return self.pad + the_a_bit + self.c.comp(line[equals + 1:]) + _dest + self.null
 
     def semi(self, line):
         """
