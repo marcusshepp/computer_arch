@@ -11,7 +11,7 @@ from utils import create_file, no_file_arg
 
 DEBUG = False
 
-def main(debeg):
+def main(debug):
     """
     in: bool debug
     out: void
