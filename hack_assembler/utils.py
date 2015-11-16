@@ -1,3 +1,9 @@
+################################################
+# Utilities
+#
+# Used to make other code look easier to read.
+#
+################################################
 import sys
 
 def create_file(ml, name):

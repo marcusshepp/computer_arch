@@ -1,3 +1,19 @@
+################################################
+# Code
+# in: `current command`
+# out: int or binary representation of said `current command`
+#
+# Contains several tables of choices. These are mapped to
+# either binary string or decimal integer representation of
+# the given `current command`.
+#
+# example usage:
+# from code import Code
+# i = ["AMD"]
+# cd = Code()
+# cd.dest(i[0])
+# >> "111"
+################################################
 class Code(object):
     """ Translates Hack assembly language mnemonics into binary codes. """
 

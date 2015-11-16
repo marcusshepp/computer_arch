@@ -1,5 +1,22 @@
+################################################
+# Parser
+# in: assembly file
+# out: machine code
+#
+# Performs various tasks nessessary to output the correct
+# commands. Can also be used to to retreieve information about
+# the `current command`.
+#
+# example usage:
+# from parser import Parser
+# i = ["@foo", "bar=1", "sum"]
+# p = Parser(i, True)
+# p.cc()
+# >> "foo"
+################################################
 import re
 from code import Code as C
+
 
 class Parser(object):
     """
@@ -80,7 +97,7 @@ class Parser(object):
 
     def reset(self):
         """
-        Self-explainitory.
+        Return back to position zero in commands.
         """
         self.command_index = 0
 

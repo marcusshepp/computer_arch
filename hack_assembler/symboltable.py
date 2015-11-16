@@ -1,3 +1,22 @@
+################################################
+# Symbol Table
+# in: Labels and Variables
+# out: Rom and Ram Address(es).
+#
+# Used to translate the `current command`.
+#
+# example usage:
+# from symboltable import SymbolTable
+# line = ["@foo"]
+# rom_address = 0
+# symt = SymbolTable()
+# symt.contains(line[1:])
+# >> False
+# symt.add_entry(line, rom_address)
+# symt.contains(line[1:])
+# >> True
+################################################
+
 class SymbolTable(object):
 
     def __init__(self):
