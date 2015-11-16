@@ -1,6 +1,10 @@
 #!/usr/bin/python
 ##################################
 # Hack assembly to Hack machine language
+#
+# example usage:
+# python Assembler.py <script name>.asm
+#
 ##################################
 
 import sys, os

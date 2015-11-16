@@ -1,6 +1,10 @@
 #!/usr/bin/python
 ##################################
 # Alternate Hack assembler
+
+# example usage:
+# python ModAssembler.py <modified script name>.asm
+#
 ##################################
 
 import sys, os
@@ -8,6 +12,7 @@ import sys, os
 from parser import Parser
 from symboltable import SymbolTable
 from utils import create_file, no_file_arg
+# from .marcus import greatness
 
 DEBUG = False
 B_REG = True
