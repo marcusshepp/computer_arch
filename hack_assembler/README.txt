@@ -1,4 +1,4 @@
-An Assembler written in plan Python.
+An Assembler written in plain Python.
 
 in: HACK assembly
 
